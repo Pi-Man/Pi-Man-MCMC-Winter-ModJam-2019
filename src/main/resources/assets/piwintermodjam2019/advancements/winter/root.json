@@ -1,0 +1,22 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:torch"
+        },
+        "title": {
+            "translate": "advancements.winter.root.title"
+        },
+        "description": {
+            "translate": "advancements.winter.root.description"
+        },
+        "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+    },
+    "criteria": {
+        "in_city": {
+            "trigger": "minecraft:location",
+            "conditions": {
+                "feature": "WinterVillage"
+            }
+        }
+    }
+}

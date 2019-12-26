@@ -1,0 +1,22 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:cobblestone"
+        },
+        "title": {
+            "translate": "advancements.winter.ruins1.title"
+        },
+        "description": {
+            "translate": "advancements.winter.ruins1.description"
+        }
+    },
+    "parent": "piwintermodjam2019:winter/elder_hut",
+    "criteria": {
+        "in_city": {
+            "trigger": "minecraft:location",
+            "conditions": {
+                "feature": "Ruins1"
+            }
+        }
+    }
+}

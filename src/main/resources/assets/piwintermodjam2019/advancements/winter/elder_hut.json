@@ -1,0 +1,23 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:planks",
+            "data": 0
+        },
+        "title": {
+            "translate": "advancements.winter.elder_hut.title"
+        },
+        "description": {
+            "translate": "advancements.winter.elder_hut.description"
+        }
+    },
+    "parent": "piwintermodjam2019:winter/root",
+    "criteria": {
+        "in_city": {
+            "trigger": "minecraft:location",
+            "conditions": {
+                "feature": "ElderHut"
+            }
+        }
+    }
+}

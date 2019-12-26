@@ -1,0 +1,22 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:mossy_cobblestone"
+        },
+        "title": {
+            "translate": "advancements.winter.abandoned_village.title"
+        },
+        "description": {
+            "translate": "advancements.winter.abandoned_village.description"
+        }
+    },
+    "parent": "piwintermodjam2019:winter/ruins1",
+    "criteria": {
+        "in_city": {
+            "trigger": "minecraft:location",
+            "conditions": {
+                "feature": "piwintermodjam2019:AbandonedVillage"
+            }
+        }
+    }
+}
