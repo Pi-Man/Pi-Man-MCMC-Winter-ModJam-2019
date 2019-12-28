@@ -80,31 +80,47 @@ public class ItemJournal extends ItemWrittenBook implements ICustomModelLocation
 						if (pages.tagCount() < 2) {
 							Integer i = playernbt.getInteger("Part1");
 							BlockPos pos = worldIn.findNearestStructure("Ruins1", BlockPos.ORIGIN, false);
-							NBTTagString day1 = new NBTTagString(
+							NBTTagString day2 = new NBTTagString(
 									  "Day: " + i + "\n"
 									+ "    I managed to find my way to the Elder's Hut.  Now with his notes, I should be able to find our lost city if the clues still exist in the world.  The first place to check should be {" + pos.getX() + ", " + pos.getZ() + "}.");
-							pages.appendTag(day1);
+							pages.appendTag(day2);
 							nbt.setByte("resolved", (byte) 0);
 						}
 						if (playernbt.hasKey("Part3")) {
 							if (pages.tagCount() < 3) {
 								Integer i = playernbt.getInteger("Part3");
 								BlockPos pos = worldIn.findNearestStructure(Main.MODID + ":AbandonedVillage", BlockPos.ORIGIN, false);
-								NBTTagString day2 = new NBTTagString(
+								NBTTagString day3 = new NBTTagString(
 										  "Day: " + i + "\n"
-										+ "    Well I managed to find my first Ruins.  Judging by the stones and the Elder's notes, I think the next place I need to look is {" + pos.getX() + ", " + pos.getY() + "}.");
-								pages.appendTag(day2);
+										+ "    Well I managed to find my first Ruins.  Judging by the stones and the Elder's notes, I think the next place I need to look is {" + pos.getX() + ", " + pos.getZ() + "}.");
+								pages.appendTag(day3);
 								nbt.setByte("resolved", (byte) 0);
 							}
 							if (playernbt.hasKey("Part4")) {
 								if (pages.tagCount() < 4) {
 									Integer i = playernbt.getInteger("Part4");
-									NBTTagString day3 = new NBTTagString(
+									BlockPos pos = worldIn.findNearestStructure(Main.MODID + ":BurnedVillage", BlockPos.ORIGIN, false);
+									NBTTagString day4_1 = new NBTTagString(
 											  "Day: " + i +"\n"
-											+ "    I looks like the stones from the Ruins came from this Abandoned Village.  bla bla bla.\n"
-											+ "bla bla bla.");
-									pages.appendTag(day3);
+											+ "    I looks like the stones from the Ruins came from this Abandoned Village.  Unfortunately this Village is too small to be our Lost City.");
+									pages.appendTag(day4_1);
+									NBTTagString day4_2 = new NBTTagString(
+											"    It seems that this VIllage was abandoned due to lack of resources, but by examining what is left and intact, I can conclude that the original setlers of this Village came from these coordinates:\n\n      {" + pos.getX() + ", " + pos.getZ() + "}");
+									pages.appendTag(day4_2);
 									nbt.setByte("resolved", (byte) 0);
+								}
+								if (playernbt.hasKey("Part5")) {
+									if (pages.tagCount() < 6) {
+										Integer i = playernbt.getInteger("Part5");
+										NBTTagString day5_1 = new NBTTagString(
+												  "Day: " + i + "\n"
+												+ "    Oh $@#%, what the hell is goin on!  There's Ghasts everywhere, where did they come from?!\n"
+												+ "Well this certainly seems to be our Lost City.  As to why there are so many Ghasts, it seems that our people tried to harness the power of the Nether.");
+										NBTTagString day5_2 = new NBTTagString(
+												"Something must have happened that released all these Ghasts who then attacked the city and left it in the state it's in now.");
+										pages.appendTag(day5_1);
+										pages.appendTag(day5_2);
+									}
 								}
 							}
 						}

@@ -2,8 +2,8 @@
 {
   "modid": "piwintermodjam2019",
   "name": "Winter ModJam 2019",
-  "description": "Example placeholder mod.",
-  "version": "0.1",
+  "description": "Mod Created for the Minecraft Modding Community 2019 Winter ModJam.",
+  "version": "1.0",
   "mcversion": "1.12.2",
   "url": "",
   "updateUrl": "",

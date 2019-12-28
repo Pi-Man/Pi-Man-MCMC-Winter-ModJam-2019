@@ -35,6 +35,7 @@ import net.minecraft.world.gen.structure.MapGenVillage;
 import net.minecraft.world.gen.structure.StructureOceanMonument;
 import net.minecraft.world.gen.structure.WoodlandMansion;
 import piman.wintermodjam2019.world.types.gen.structure.MapGenAbandonedVillage;
+import piman.wintermodjam2019.world.types.gen.structure.MapGenBurnedVillage;
 import piman.wintermodjam2019.world.types.gen.structure.MapGenElderHut;
 import piman.wintermodjam2019.world.types.gen.structure.MapGenRuins1;
 import piman.wintermodjam2019.world.types.gen.structure.MapGenWinterVillage;
@@ -106,6 +107,10 @@ public class ChunkGeneratorWinter implements IChunkGenerator
         this.otherGenerators.addGenerator(new MapGenRuins1(), false);
         this.otherGenerators.addGenerator(new MapGenElderHut(), true);
         this.otherGenerators.addGenerator(new MapGenAbandonedVillage(), false);
+        Map<String, String> map = new HashMap<>();
+        map.put("size", "50");
+        map.put("charred", "true");
+        this.otherGenerators.addGenerator(new MapGenBurnedVillage(map), false);
 
         for (int i = -2; i <= 2; ++i)
         {

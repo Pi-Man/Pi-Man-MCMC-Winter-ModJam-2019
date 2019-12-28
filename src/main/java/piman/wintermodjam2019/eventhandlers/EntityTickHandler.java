@@ -62,6 +62,7 @@ public class EntityTickHandler {
 			if (player.getEntityData().hasKey("Part1")) addDecoration(world, list, "ElderHut", (byte) MapDecoration.Type.MANSION.ordinal());
 			if (player.getEntityData().hasKey("Part2")) addDecoration(world, list, "Ruins1", (byte) MapDecoration.Type.TARGET_X.ordinal());
 			if (player.getEntityData().hasKey("Part3")) addDecoration(world, list, Main.MODID + ":AbandonedVillage", (byte) MapDecoration.Type.TARGET_X.ordinal());
+			if (player.getEntityData().hasKey("Part4")) addDecoration(world, list, Main.MODID + ":BurnedVillage", (byte) MapDecoration.Type.TARGET_X.ordinal());
 
 		}
 	}
@@ -125,6 +126,10 @@ public class EntityTickHandler {
 		
 		if (!nbt.hasKey("Part4") && checkAdvancement(player, world, "winter/abandoned_village")) {
 			nbt.setInteger("Part4", (int) (world.getWorldTime() / 24000 + 1));
+		}
+		
+		if (!nbt.hasKey("Part5") && checkAdvancement(player, world, "winter/burned_village")) {
+			nbt.setInteger("Part5", (int) (world.getWorldTime() / 24000 + 1));
 		}
 	}
 	

@@ -1,6 +1,8 @@
 package piman.wintermodjam2019.world.types.gen.structure;
 
 import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -19,6 +21,8 @@ import net.minecraft.block.BlockTorch;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.monster.EntityGhast;
+import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Biomes;
@@ -40,6 +44,7 @@ import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureComponent.BlockSelector;
 import net.minecraft.world.gen.structure.template.TemplateManager;
 import net.minecraft.world.storage.loot.LootTableList;
+import piman.wintermodjam2019.world.types.gen.WorldGenExplosion;
 
 public class StructureAbandonedVillagePieces
 {
@@ -52,11 +57,22 @@ public class StructureAbandonedVillagePieces
 		}
 	};
 	
+	public static final BlockSelector CHARCOAL10 = new BlockSelector() {
+		@Override
+		public void selectBlocks(Random rand, int x, int y, int z, boolean wall) {
+			IBlockState state = null;
+			if (rand.nextInt(10) == 0) {
+				state = Blocks.COAL_BLOCK.getDefaultState();
+			}
+			this.blockstate = state;
+		}
+	}; 
+	
     public static void registerVillagePieces()
     {
         MapGenStructureIO.registerStructureComponent(StructureAbandonedVillagePieces.House1.class, "AViBH");
-        //MapGenStructureIO.registerStructureComponent(StructureAbandonedVillagePieces.Field1.class, "AViDF");
-        //MapGenStructureIO.registerStructureComponent(StructureAbandonedVillagePieces.Field2.class, "AViF");
+        MapGenStructureIO.registerStructureComponent(StructureAbandonedVillagePieces.Field1.class, "AViDF");
+        MapGenStructureIO.registerStructureComponent(StructureAbandonedVillagePieces.Field2.class, "AViF");
         MapGenStructureIO.registerStructureComponent(StructureAbandonedVillagePieces.Torch.class, "AViL");
         MapGenStructureIO.registerStructureComponent(StructureAbandonedVillagePieces.Hall.class, "AViPH");
         MapGenStructureIO.registerStructureComponent(StructureAbandonedVillagePieces.House4Garden.class, "AViSH");
@@ -415,6 +431,7 @@ public class StructureAbandonedVillagePieces
                 }
 
                 //this.spawnVillagers(worldIn, structureBoundingBoxIn, 2, 1, 2, 1);
+                this.doRandomExplosions(worldIn, structureBoundingBoxIn, randomIn, 0, 0, 0, 5, 6, 9, 2, 4);
                 return true;
             }
 
@@ -535,52 +552,56 @@ public class StructureAbandonedVillagePieces
                     this.boundingBox.offset(0, this.averageGroundLvl - this.boundingBox.maxY + 4 - 1, 0);
                 }
 
-                IBlockState iblockstate = this.getBiomeSpecificBlockState(Blocks.LOG.getDefaultState());
+                //IBlockState iblockstate = this.getBiomeSpecificBlockState(Blocks.LOG.getDefaultState());
                 this.fillWithBlocks(worldIn, structureBoundingBoxIn, 0, 1, 0, 12, 4, 8, Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, 1, 2, 0, 7, Blocks.FARMLAND.getDefaultState(), Blocks.FARMLAND.getDefaultState(), false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 4, 0, 1, 5, 0, 7, Blocks.FARMLAND.getDefaultState(), Blocks.FARMLAND.getDefaultState(), false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 7, 0, 1, 8, 0, 7, Blocks.FARMLAND.getDefaultState(), Blocks.FARMLAND.getDefaultState(), false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 10, 0, 1, 11, 0, 7, Blocks.FARMLAND.getDefaultState(), Blocks.FARMLAND.getDefaultState(), false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 0, 0, 0, 0, 0, 8, iblockstate, iblockstate, false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 6, 0, 0, 6, 0, 8, iblockstate, iblockstate, false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 12, 0, 0, 12, 0, 8, iblockstate, iblockstate, false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, 0, 11, 0, 0, iblockstate, iblockstate, false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, 8, 11, 0, 8, iblockstate, iblockstate, false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 3, 0, 1, 3, 0, 7, Blocks.WATER.getDefaultState(), Blocks.WATER.getDefaultState(), false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 9, 0, 1, 9, 0, 7, Blocks.WATER.getDefaultState(), Blocks.WATER.getDefaultState(), false);
-                this.setBlockState(worldIn, Blocks.TORCH.getDefaultState(), 3, 1, 0, structureBoundingBoxIn);
-                this.setBlockState(worldIn, Blocks.TORCH.getDefaultState(), 3, 1, 8, structureBoundingBoxIn);
-                this.setBlockState(worldIn, Blocks.TORCH.getDefaultState(), 9, 1, 0, structureBoundingBoxIn);
-                this.setBlockState(worldIn, Blocks.TORCH.getDefaultState(), 9, 1, 8, structureBoundingBoxIn);
-
-                for (int i = 1; i <= 7; ++i)
-                {
-                    int j = ((BlockCrops)this.cropTypeA).getMaxAge();
-                    int k = j / 3;
-                    this.setBlockState(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getInt(randomIn, k, j)), 1, 1, i, structureBoundingBoxIn);
-                    this.setBlockState(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getInt(randomIn, k, j)), 2, 1, i, structureBoundingBoxIn);
-                    int l = ((BlockCrops)this.cropTypeB).getMaxAge();
-                    int i1 = l / 3;
-                    this.setBlockState(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getInt(randomIn, i1, l)), 4, 1, i, structureBoundingBoxIn);
-                    this.setBlockState(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getInt(randomIn, i1, l)), 5, 1, i, structureBoundingBoxIn);
-                    int j1 = ((BlockCrops)this.cropTypeC).getMaxAge();
-                    int k1 = j1 / 3;
-                    this.setBlockState(worldIn, this.cropTypeC.getStateFromMeta(MathHelper.getInt(randomIn, k1, j1)), 7, 1, i, structureBoundingBoxIn);
-                    this.setBlockState(worldIn, this.cropTypeC.getStateFromMeta(MathHelper.getInt(randomIn, k1, j1)), 8, 1, i, structureBoundingBoxIn);
-                    int l1 = ((BlockCrops)this.cropTypeD).getMaxAge();
-                    int i2 = l1 / 3;
-                    this.setBlockState(worldIn, this.cropTypeD.getStateFromMeta(MathHelper.getInt(randomIn, i2, l1)), 10, 1, i, structureBoundingBoxIn);
-                    this.setBlockState(worldIn, this.cropTypeD.getStateFromMeta(MathHelper.getInt(randomIn, i2, l1)), 11, 1, i, structureBoundingBoxIn);
+                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, 1, 2, 0, 7, Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState(), false);
+                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 4, 0, 1, 5, 0, 7, Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState(), false);
+                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 7, 0, 1, 8, 0, 7, Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState(), false);
+                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 10, 0, 1, 11, 0, 7, Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState(), false);
+                if (charred) {
+                	this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 0, 0, 0, 0, 0, 8, false, randomIn, CHARCOAL10);
+	                this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 6, 0, 0, 6, 0, 8, false, randomIn, CHARCOAL10);
+	                this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 12, 0, 0, 12, 0, 8, false, randomIn, CHARCOAL10);
+	                this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 1, 0, 0, 11, 0, 0, false, randomIn, CHARCOAL10);
+	                this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 1, 0, 8, 11, 0, 8, false, randomIn, CHARCOAL10);
                 }
+//                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 3, 0, 1, 3, 0, 7, Blocks.WATER.getDefaultState(), Blocks.WATER.getDefaultState(), false);
+//                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 9, 0, 1, 9, 0, 7, Blocks.WATER.getDefaultState(), Blocks.WATER.getDefaultState(), false);
+//                this.setBlockState(worldIn, Blocks.TORCH.getDefaultState(), 3, 1, 0, structureBoundingBoxIn);
+//                this.setBlockState(worldIn, Blocks.TORCH.getDefaultState(), 3, 1, 8, structureBoundingBoxIn);
+//                this.setBlockState(worldIn, Blocks.TORCH.getDefaultState(), 9, 1, 0, structureBoundingBoxIn);
+//                this.setBlockState(worldIn, Blocks.TORCH.getDefaultState(), 9, 1, 8, structureBoundingBoxIn);
+
+//                for (int i = 1; i <= 7; ++i)
+//                {
+//                    int j = ((BlockCrops)this.cropTypeA).getMaxAge();
+//                    int k = j / 3;
+//                    this.setBlockState(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getInt(randomIn, k, j)), 1, 1, i, structureBoundingBoxIn);
+//                    this.setBlockState(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getInt(randomIn, k, j)), 2, 1, i, structureBoundingBoxIn);
+//                    int l = ((BlockCrops)this.cropTypeB).getMaxAge();
+//                    int i1 = l / 3;
+//                    this.setBlockState(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getInt(randomIn, i1, l)), 4, 1, i, structureBoundingBoxIn);
+//                    this.setBlockState(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getInt(randomIn, i1, l)), 5, 1, i, structureBoundingBoxIn);
+//                    int j1 = ((BlockCrops)this.cropTypeC).getMaxAge();
+//                    int k1 = j1 / 3;
+//                    this.setBlockState(worldIn, this.cropTypeC.getStateFromMeta(MathHelper.getInt(randomIn, k1, j1)), 7, 1, i, structureBoundingBoxIn);
+//                    this.setBlockState(worldIn, this.cropTypeC.getStateFromMeta(MathHelper.getInt(randomIn, k1, j1)), 8, 1, i, structureBoundingBoxIn);
+//                    int l1 = ((BlockCrops)this.cropTypeD).getMaxAge();
+//                    int i2 = l1 / 3;
+//                    this.setBlockState(worldIn, this.cropTypeD.getStateFromMeta(MathHelper.getInt(randomIn, i2, l1)), 10, 1, i, structureBoundingBoxIn);
+//                    this.setBlockState(worldIn, this.cropTypeD.getStateFromMeta(MathHelper.getInt(randomIn, i2, l1)), 11, 1, i, structureBoundingBoxIn);
+//                }
 
                 for (int j2 = 0; j2 < 9; ++j2)
                 {
                     for (int k2 = 0; k2 < 13; ++k2)
                     {
-                        this.clearCurrentPositionBlocksUpwards(worldIn, k2, 4, j2, structureBoundingBoxIn);
+                        //this.clearCurrentPositionBlocksUpwards(worldIn, k2, 4, j2, structureBoundingBoxIn);
                         this.replaceAirAndLiquidDownwards(worldIn, Blocks.DIRT.getDefaultState(), k2, -1, j2, structureBoundingBoxIn);
                     }
                 }
+                
+                this.doRandomExplosions(worldIn, structureBoundingBoxIn, randomIn, 0, 0, 0, 13, 2, 9, 2, 2);
 
                 return true;
             }
@@ -667,38 +688,42 @@ public class StructureAbandonedVillagePieces
                     this.boundingBox.offset(0, this.averageGroundLvl - this.boundingBox.maxY + 4 - 1, 0);
                 }
 
-                IBlockState iblockstate = this.getBiomeSpecificBlockState(Blocks.LOG.getDefaultState());
+                //IBlockState iblockstate = this.getBiomeSpecificBlockState(Blocks.LOG.getDefaultState());
                 this.fillWithBlocks(worldIn, structureBoundingBoxIn, 0, 1, 0, 6, 4, 8, Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, 1, 2, 0, 7, Blocks.FARMLAND.getDefaultState(), Blocks.FARMLAND.getDefaultState(), false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 4, 0, 1, 5, 0, 7, Blocks.FARMLAND.getDefaultState(), Blocks.FARMLAND.getDefaultState(), false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 0, 0, 0, 0, 0, 8, iblockstate, iblockstate, false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 6, 0, 0, 6, 0, 8, iblockstate, iblockstate, false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, 0, 5, 0, 0, iblockstate, iblockstate, false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, 8, 5, 0, 8, iblockstate, iblockstate, false);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 3, 0, 1, 3, 0, 7, Blocks.WATER.getDefaultState(), Blocks.WATER.getDefaultState(), false);
-                this.setBlockState(worldIn, Blocks.TORCH.getDefaultState(), 3, 1, 0, structureBoundingBoxIn);
-                this.setBlockState(worldIn, Blocks.TORCH.getDefaultState(), 3, 1, 8, structureBoundingBoxIn);
-
-                for (int i = 1; i <= 7; ++i)
-                {
-                    int j = ((BlockCrops)this.cropTypeA).getMaxAge();
-                    int k = j / 3;
-                    this.setBlockState(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getInt(randomIn, k, j)), 1, 1, i, structureBoundingBoxIn);
-                    this.setBlockState(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getInt(randomIn, k, j)), 2, 1, i, structureBoundingBoxIn);
-                    int l = ((BlockCrops)this.cropTypeB).getMaxAge();
-                    int i1 = l / 3;
-                    this.setBlockState(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getInt(randomIn, i1, l)), 4, 1, i, structureBoundingBoxIn);
-                    this.setBlockState(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getInt(randomIn, i1, l)), 5, 1, i, structureBoundingBoxIn);
+                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, 1, 2, 0, 7, Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState(), false);
+                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 4, 0, 1, 5, 0, 7, Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState(), false);
+                if (charred) {
+	                this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 0, 0, 0, 0, 0, 8, false, randomIn, CHARCOAL10);
+	                this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 6, 0, 0, 6, 0, 8, false, randomIn, CHARCOAL10);
+	                this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 1, 0, 0, 5, 0, 0, false, randomIn, CHARCOAL10);
+	                this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 1, 0, 8, 5, 0, 8, false, randomIn, CHARCOAL10);
                 }
+//                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 3, 0, 1, 3, 0, 7, Blocks.WATER.getDefaultState(), Blocks.WATER.getDefaultState(), false);
+//                this.setBlockState(worldIn, Blocks.TORCH.getDefaultState(), 3, 1, 0, structureBoundingBoxIn);
+//                this.setBlockState(worldIn, Blocks.TORCH.getDefaultState(), 3, 1, 8, structureBoundingBoxIn);
+//
+//                for (int i = 1; i <= 7; ++i)
+//                {
+//                    int j = ((BlockCrops)this.cropTypeA).getMaxAge();
+//                    int k = j / 3;
+//                    this.setBlockState(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getInt(randomIn, k, j)), 1, 1, i, structureBoundingBoxIn);
+//                    this.setBlockState(worldIn, this.cropTypeA.getStateFromMeta(MathHelper.getInt(randomIn, k, j)), 2, 1, i, structureBoundingBoxIn);
+//                    int l = ((BlockCrops)this.cropTypeB).getMaxAge();
+//                    int i1 = l / 3;
+//                    this.setBlockState(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getInt(randomIn, i1, l)), 4, 1, i, structureBoundingBoxIn);
+//                    this.setBlockState(worldIn, this.cropTypeB.getStateFromMeta(MathHelper.getInt(randomIn, i1, l)), 5, 1, i, structureBoundingBoxIn);
+//                }
 
                 for (int j1 = 0; j1 < 9; ++j1)
                 {
                     for (int k1 = 0; k1 < 7; ++k1)
                     {
-                        this.clearCurrentPositionBlocksUpwards(worldIn, k1, 4, j1, structureBoundingBoxIn);
+                        //this.clearCurrentPositionBlocksUpwards(worldIn, k1, 4, j1, structureBoundingBoxIn);
                         this.replaceAirAndLiquidDownwards(worldIn, Blocks.DIRT.getDefaultState(), k1, -1, j1, structureBoundingBoxIn);
                     }
                 }
+                
+                this.doRandomExplosions(worldIn, structureBoundingBoxIn, randomIn, 0, 0, 0, 7, 2, 9, 1, 1);
 
                 return true;
             }
@@ -741,13 +766,13 @@ public class StructureAbandonedVillagePieces
                     this.boundingBox.offset(0, this.averageGroundLvl - this.boundingBox.maxY + 7 - 1, 0);
                 }
 
-                //IBlockState iblockstate = this.getBiomeSpecificBlockState(Blocks.COBBLESTONE.getDefaultState());
-                //IBlockState iblockstate1 = this.getBiomeSpecificBlockState(Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
-                //IBlockState iblockstate2 = this.getBiomeSpecificBlockState(Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH));
-                //IBlockState iblockstate3 = this.getBiomeSpecificBlockState(Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST));
-               // IBlockState iblockstate4 = this.getBiomeSpecificBlockState(Blocks.PLANKS.getDefaultState());
-                //IBlockState iblockstate5 = this.getBiomeSpecificBlockState(Blocks.LOG.getDefaultState());
-                //IBlockState iblockstate6 = this.getBiomeSpecificBlockState(Blocks.OAK_FENCE.getDefaultState());
+//                IBlockState iblockstate = this.getBiomeSpecificBlockState(Blocks.COBBLESTONE.getDefaultState());
+//                IBlockState iblockstate1 = this.getBiomeSpecificBlockState(Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
+//                IBlockState iblockstate2 = this.getBiomeSpecificBlockState(Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH));
+//                IBlockState iblockstate3 = this.getBiomeSpecificBlockState(Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST));
+//                IBlockState iblockstate4 = this.getBiomeSpecificBlockState(Blocks.PLANKS.getDefaultState());
+//                IBlockState iblockstate5 = this.getBiomeSpecificBlockState(Blocks.LOG.getDefaultState());
+//                IBlockState iblockstate6 = this.getBiomeSpecificBlockState(Blocks.OAK_FENCE.getDefaultState());
                 this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 1, 1, 7, 4, 4, Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), false);
                 this.fillWithBlocks(worldIn, structureBoundingBoxIn, 2, 1, 6, 8, 4, 10, Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), false);
                 this.fillWithBlocks(worldIn, structureBoundingBoxIn, 2, 0, 6, 8, 0, 10, Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState(), false);
@@ -755,7 +780,7 @@ public class StructureAbandonedVillagePieces
 //                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 2, 1, 6, 2, 1, 10, iblockstate6, iblockstate6, false);
 //                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 8, 1, 6, 8, 1, 10, iblockstate6, iblockstate6, false);
 //                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 3, 1, 10, 7, 1, 10, iblockstate6, iblockstate6, false);
-//                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, 1, 7, 0, 4, iblockstate4, iblockstate4, false);
+                if (charred) this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 1, 0, 1, 7, 0, 4, false, randomIn, CHARCOAL10);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 0, 0, 0, 0, 3, 5, false, randomIn, COBBLEMOSS5050);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 8, 0, 0, 8, 3, 5, false, randomIn, COBBLEMOSS5050);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 1, 0, 0, 7, 1, 0, false, randomIn, COBBLEMOSS5050);
@@ -831,6 +856,7 @@ public class StructureAbandonedVillagePieces
                 }
 
                 //this.spawnVillagers(worldIn, structureBoundingBoxIn, 4, 1, 2, 2);
+                this.doRandomExplosions(worldIn, structureBoundingBoxIn, randomIn, 0, 0, 0, 9, 3, 5, 2, 3);
                 return true;
             }
 
@@ -903,6 +929,7 @@ public class StructureAbandonedVillagePieces
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 1, 1, 5, 8, 1, 5, false, randomIn, COBBLEMOSS5050);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 8, 1, 0, 8, 1, 4, false, randomIn, COBBLEMOSS5050);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 2, 1, 0, 7, 1, 0, false, randomIn, COBBLEMOSS5050);
+                if (charred) this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 1, 1, 1, 7, 1, 4, false, randomIn, CHARCOAL10);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 0, 2, 0, 0, 2 + randomIn.nextInt(3), 0, false, randomIn, COBBLEMOSS5050);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 0, 2, 5, 0, 2 + randomIn.nextInt(3), 5, false, randomIn, COBBLEMOSS5050);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 8, 2, 5, 8, 2 + randomIn.nextInt(3), 5, false, randomIn, COBBLEMOSS5050);
@@ -967,6 +994,7 @@ public class StructureAbandonedVillagePieces
                 }
 
                 //this.spawnVillagers(worldIn, structureBoundingBoxIn, 2, 1, 2, 1);
+                this.doRandomExplosions(worldIn, structureBoundingBoxIn, randomIn, 0, 0, 0, 9, 3, 6, 2, 3);
                 return true;
             }
 
@@ -1057,8 +1085,8 @@ public class StructureAbandonedVillagePieces
 //                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 5, 1, 0, 5, 3, 0, iblockstate6, iblockstate6, false);
 //                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 9, 1, 0, 9, 3, 0, iblockstate6, iblockstate6, false);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 6, 1, 4, 9, 4, 6, false, randomIn, COBBLEMOSS5050);
-                this.setBlockState(worldIn, Blocks.FLOWING_LAVA.getDefaultState(), 7, 1, 5, structureBoundingBoxIn);
-                this.setBlockState(worldIn, Blocks.FLOWING_LAVA.getDefaultState(), 8, 1, 5, structureBoundingBoxIn);
+                this.setBlockState(worldIn, Blocks.STONE.getDefaultState(), 7, 1, 5, structureBoundingBoxIn);
+                this.setBlockState(worldIn, Blocks.STONE.getDefaultState(), 8, 1, 5, structureBoundingBoxIn);
                 this.setBlockState(worldIn, Blocks.IRON_BARS.getDefaultState(), 9, 2, 5, structureBoundingBoxIn);
                 this.setBlockState(worldIn, Blocks.IRON_BARS.getDefaultState(), 9, 2, 4, structureBoundingBoxIn);
                 this.fillWithBlocks(worldIn, structureBoundingBoxIn, 7, 2, 4, 8, 2, 5, Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), false);
@@ -1105,6 +1133,7 @@ public class StructureAbandonedVillagePieces
                 }
 
                 //this.spawnVillagers(worldIn, structureBoundingBoxIn, 7, 1, 1, 1);
+                this.doRandomExplosions(worldIn, structureBoundingBoxIn, randomIn, 0, 0, 0, 10, 3, 7, 3, 4);
                 return true;
             }
 
@@ -1160,8 +1189,10 @@ public class StructureAbandonedVillagePieces
 //                IBlockState iblockstate6 = this.getBiomeSpecificBlockState(Blocks.LOG.getDefaultState());
                 this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 1, 1, 7, 4, 4, Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), false);
                 this.fillWithBlocks(worldIn, structureBoundingBoxIn, 2, 1, 6, 8, 4, 10, Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), false);
-//                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 2, 0, 5, 8, 0, 10, iblockstate5, iblockstate5, false);
-//                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, 1, 7, 0, 4, iblockstate5, iblockstate5, false);
+                if (charred) {
+                	this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 2, 0, 5, 8, 0, 10, false, randomIn, CHARCOAL10);
+                	this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 1, 0, 1, 7, 0, 4, false, randomIn, CHARCOAL10);
+                }
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 0, 0, 0, 0, 3, 5, false, randomIn, COBBLEMOSS5050);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 8, 0, 0, 8, 3, 10, false, randomIn, COBBLEMOSS5050);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 1, 0, 0, 7, 2, 0, false, randomIn, COBBLEMOSS5050);
@@ -1301,6 +1332,7 @@ public class StructureAbandonedVillagePieces
                 }
 
                 //this.spawnVillagers(worldIn, structureBoundingBoxIn, 4, 1, 2, 2);
+                this.doRandomExplosions(worldIn, structureBoundingBoxIn, randomIn, 0, 0, 0, 9, 3, 11, 3, 6);
                 return true;
             }
         }
@@ -1370,7 +1402,7 @@ public class StructureAbandonedVillagePieces
                 //IBlockState iblockstate4 = this.getBiomeSpecificBlockState(Blocks.OAK_FENCE.getDefaultState());
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 0, 0, 0, 4, 0, 4, false, randomIn, COBBLEMOSS5050);
 //                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 0, 4, 0, 4, 4, 4, iblockstate3, iblockstate3, false);
-//                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 4, 1, 3, 4, 3, iblockstate1, iblockstate1, false);
+                if (charred) this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 1, 1, 1, 3, 1, 3, false, randomIn, CHARCOAL10);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 0, 1, 0, 0, 1 + randomIn.nextInt(3), 0, false, randomIn, COBBLEMOSS5050);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 4, 1, 0, 0, 1 + randomIn.nextInt(3), 0, false, randomIn, COBBLEMOSS5050);
                 this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 0, 1, 4, 0, 1 + randomIn.nextInt(3), 0, false, randomIn, COBBLEMOSS5050);
@@ -1454,6 +1486,7 @@ public class StructureAbandonedVillagePieces
                 }
 
                 //this.spawnVillagers(worldIn, structureBoundingBoxIn, 1, 1, 2, 1);
+                this.doRandomExplosions(worldIn, structureBoundingBoxIn, randomIn, 0, 0, 0, 5, 3, 5, 2, 3);
                 return true;
             }
         }
@@ -1633,6 +1666,8 @@ public class StructureAbandonedVillagePieces
                         }
                     }
                 }
+                
+                this.doRandomExplosions(worldIn, structureBoundingBoxIn, randomIn, 0, 0, 0, this.boundingBox.maxX, 0, this.boundingBox.maxZ, 0, 3);
 
                 return true;
             }
@@ -1689,6 +1724,7 @@ public class StructureAbandonedVillagePieces
             public List<StructureComponent> pendingHouses = Lists.<StructureComponent>newArrayList();
             public List<StructureComponent> pendingRoads = Lists.<StructureComponent>newArrayList();
             public Biome biome;
+            public boolean charred;
             
             private int totalXB = 0;
             private int totalZB = 0;
@@ -1746,7 +1782,7 @@ public class StructureAbandonedVillagePieces
             {
             }
 
-            public Start(BiomeProvider biomeProviderIn, int p_i2104_2_, Random rand, int p_i2104_4_, int p_i2104_5_, List<StructureAbandonedVillagePieces.PieceWeight> p_i2104_6_, int p_i2104_7_)
+            public Start(BiomeProvider biomeProviderIn, int p_i2104_2_, Random rand, int p_i2104_4_, int p_i2104_5_, List<StructureAbandonedVillagePieces.PieceWeight> p_i2104_6_, int p_i2104_7_, boolean charred)
             {
                 super((StructureAbandonedVillagePieces.Start)null, 0, rand, p_i2104_4_, p_i2104_5_);
                 this.biomeProvider = biomeProviderIn;
@@ -1754,6 +1790,7 @@ public class StructureAbandonedVillagePieces
                 this.terrainType = p_i2104_7_;
                 Biome biome = biomeProviderIn.getBiome(new BlockPos(p_i2104_4_, 0, p_i2104_5_), Biomes.DEFAULT);
                 this.biome = biome;
+                this.charred = charred;
                 this.startPiece = this;
 
                 if (biome instanceof BiomeDesert)
@@ -1832,7 +1869,9 @@ public class StructureAbandonedVillagePieces
             private int villagersSpawned;
             protected int structureType;
             protected boolean isZombieInfested;
+            protected boolean charred;
             protected StructureAbandonedVillagePieces.Start startPiece;
+            private List<WorldGenExplosion> explosions;
 
             public Village()
             {
@@ -1847,6 +1886,7 @@ public class StructureAbandonedVillagePieces
                     this.structureType = start.structureType;
                     this.isZombieInfested = start.isZombieInfested;
                     startPiece = start;
+                    this.charred = start.charred;
                 }
             }
 
@@ -1859,6 +1899,7 @@ public class StructureAbandonedVillagePieces
                 tagCompound.setInteger("VCount", this.villagersSpawned);
                 tagCompound.setByte("Type", (byte)this.structureType);
                 tagCompound.setBoolean("Zombie", this.isZombieInfested);
+                tagCompound.setBoolean("Charred", this.charred);
             }
 
             /**
@@ -1876,6 +1917,7 @@ public class StructureAbandonedVillagePieces
                 }
 
                 this.isZombieInfested = tagCompound.getBoolean("Zombie");
+                this.charred = tagCompound.getBoolean("Charred");
             }
 
             /**
@@ -2181,7 +2223,60 @@ public class StructureAbandonedVillagePieces
             
             protected void setBlockState(Random rand, World worldIn, BlockSelector selector, int x, int y, int z, StructureBoundingBox boundingboxIn) {
             	selector.selectBlocks(rand, x, y, z, false);
-            	this.setBlockState(worldIn, selector.getBlockState(), x, y, z, boundingboxIn);
+            	if (selector.getBlockState() != null) {
+            		this.setBlockState(worldIn, selector.getBlockState(), x, y, z, boundingboxIn);
+            	}
+            }
+            
+            protected void fillWithRandomizedBlocks(World worldIn, StructureBoundingBox boundingboxIn, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, boolean alwaysReplace, Random rand, StructureComponent.BlockSelector blockselector)
+            {
+                for (int i = minY; i <= maxY; ++i)
+                {
+                    for (int j = minX; j <= maxX; ++j)
+                    {
+                        for (int k = minZ; k <= maxZ; ++k)
+                        {
+                            if (!alwaysReplace || this.getBlockStateFromPos(worldIn, j, i, k, boundingboxIn).getMaterial() != Material.AIR)
+                            {
+                                blockselector.selectBlocks(rand, j, i, k, i == minY || i == maxY || j == minX || j == maxX || k == minZ || k == maxZ);
+                                if (blockselector.getBlockState() != null) {
+                                    this.setBlockState(worldIn, blockselector.getBlockState(), j, i, k, boundingboxIn);
+								}
+                            }
+                        }
+                    }
+                }
+            }
+            
+            protected void doRandomExplosions(World world, StructureBoundingBox structureBoundingBoxIn, Random rand, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, int minCount, int maxCount) {
+            	if (charred) {
+            		if (explosions == null) {
+            			explosions = new ArrayList<>();
+	            		for (int i2 = MathHelper.getInt(rand, minCount, maxCount); i2 > 0; i2--) {
+	            			int i = MathHelper.getInt(rand, minX, maxX);
+	            			int j = MathHelper.getInt(rand, minY, maxY);
+	            			int k = MathHelper.getInt(rand, minZ, maxZ);
+	            			
+	            			int x = this.getXWithOffset(i, k);
+	            			int y = this.getYWithOffset(j);
+	            			int z = this.getZWithOffset(i, k);
+	            				            			            			
+	            			explosions.add(new WorldGenExplosion(world, x, y, z, 4, false, true));
+	            			
+	            			if (rand.nextInt(100) == 0 && !world.isRemote) {
+	                            EntityGhast ghast = new EntityGhast(world);
+	                            ghast.setLocationAndAngles(x, y + 10, z, 0.0F, 0.0F);
+	                            ghast.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(ghast)), (IEntityLivingData)null);
+	                            ghast.enablePersistence();
+	                            world.spawnEntity(ghast);
+	            			}
+	            		}
+            		}
+            		for (WorldGenExplosion explosion : explosions) {
+            			explosion.doExplosionA(structureBoundingBoxIn);
+            			explosion.doExplosionB(structureBoundingBoxIn);
+            		}
+            	}
             }
         }
 
@@ -2264,6 +2359,7 @@ public class StructureAbandonedVillagePieces
                     }
                 }
 
+                this.doRandomExplosions(worldIn, structureBoundingBoxIn, randomIn, 0, 0, 0, 6, 2, 6, 0, 1);
                 return true;
             }
         }
@@ -2347,6 +2443,7 @@ public class StructureAbandonedVillagePieces
 //                {
 //                    this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 5, 1, 2, 5, 3, iblockstate3, iblockstate3, false);
 //                }
+                if (charred) this.fillWithRandomizedBlocks(worldIn, structureBoundingBoxIn, 1, 1, 1, 2, 1, 3, false, randomIn, CHARCOAL10);
 //
 //                this.setBlockState(worldIn, iblockstate3, 1, 4, 0, structureBoundingBoxIn);
 //                this.setBlockState(worldIn, iblockstate3, 2, 4, 0, structureBoundingBoxIn);
@@ -2399,6 +2496,7 @@ public class StructureAbandonedVillagePieces
                 }
 
                 //this.spawnVillagers(worldIn, structureBoundingBoxIn, 1, 1, 2, 1);
+                this.doRandomExplosions(worldIn, structureBoundingBoxIn, randomIn, 0, 0, 0, 4, 2, 5, 1, 2);
                 return true;
             }
         }

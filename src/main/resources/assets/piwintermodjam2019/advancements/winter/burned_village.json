@@ -1,0 +1,22 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:coal_block"
+        },
+        "title": {
+            "translate": "advancements.winter.burned_village.title"
+        },
+        "description": {
+            "translate": "advancements.winter.burned_village.description"
+        }
+    },
+    "parent": "piwintermodjam2019:winter/abandoned_village",
+    "criteria": {
+        "in_city": {
+            "trigger": "minecraft:location",
+            "conditions": {
+                "feature": "piwintermodjam2019:BurnedVillage"
+            }
+        }
+    }
+}

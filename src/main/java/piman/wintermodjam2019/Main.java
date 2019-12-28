@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import piman.wintermodjam2019.world.types.WorldTypeWinter;
 import piman.wintermodjam2019.world.types.gen.structure.MapGenAbandonedVillage;
+import piman.wintermodjam2019.world.types.gen.structure.MapGenBurnedVillage;
 import piman.wintermodjam2019.world.types.gen.structure.MapGenElderHut;
 import piman.wintermodjam2019.world.types.gen.structure.MapGenRuins1;
 import piman.wintermodjam2019.world.types.gen.structure.MapGenWinterVillage;
@@ -23,7 +24,7 @@ public class Main {
 	
 	public static final String MODID = "piwintermodjam2019";
 	public static final String NAME = "Winter ModJam 2019";
-	public static final String VERSION = "0.1";
+	public static final String VERSION = "1.0";
 	
 	private static WorldTypeWinter worldTypeWinter;
 	

@@ -2,5 +2,11 @@ generator.winter=Winter World
 
 advancements.winter.root.title=Your Journey Begins
 advancements.winter.root.description=IDK, Hopefully I can figure something out in time.
+advancements.winter.elder_hut.title=Elder Hut
+advancements.winter.elder_hut.description=Find the Elders House.
 advancements.winter.ruins1.title=Ruins
 advancements.winter.ruins1.description=Find your first ruins.
+advancements.winter.abandoned_village.title=Abandoned Village
+advancements.winter.abandoned_village.description=Find the Abandoned Village.
+advancements.winter.burned_village.title=Origin
+advancements.winter.burned_village.description=Find the lost city.

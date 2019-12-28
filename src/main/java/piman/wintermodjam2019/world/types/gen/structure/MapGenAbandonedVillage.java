@@ -24,8 +24,9 @@ public class MapGenAbandonedVillage extends MapGenSingelSpawn
 {
     /** A list of all the biomes villages can spawn in. */
     /** None */
-    private int size;
-
+    protected int size;
+    protected boolean charred;
+    
     public MapGenAbandonedVillage()
     {
     }
@@ -39,6 +40,15 @@ public class MapGenAbandonedVillage extends MapGenSingelSpawn
             if (((String)entry.getKey()).equals("size"))
             {
                 this.size = MathHelper.getInt(entry.getValue(), this.size, 0);
+            }
+            
+            if (entry.getKey().equals("charred")) {
+            	if (entry.getValue().equals("false")) {
+            		this.charred = false;
+            	}
+            	else if (entry.getValue().equals("true")) {
+            		this.charred = true;
+            	}
             }
         }
     }
@@ -78,7 +88,7 @@ public class MapGenAbandonedVillage extends MapGenSingelSpawn
 
     protected StructureStart getStructureStart(int chunkX, int chunkZ)
     {
-        return new MapGenAbandonedVillage.Start(this.world, this.rand, chunkX, chunkZ, this.size);
+        return new MapGenAbandonedVillage.Start(this.world, this.rand, chunkX, chunkZ, this.size, this.charred);
     }
 
     public static class Start extends StructureStart
@@ -90,11 +100,11 @@ public class MapGenAbandonedVillage extends MapGenSingelSpawn
             {
             }
 
-            public Start(World worldIn, Random rand, int x, int z, int size)
+            public Start(World worldIn, Random rand, int x, int z, int size, boolean charred)
             {
                 super(x, z);
                 List<StructureAbandonedVillagePieces.PieceWeight> list = StructureAbandonedVillagePieces.getStructureVillageWeightedPieceList(rand, size);
-                StructureAbandonedVillagePieces.Start structurevillagepieces$start = new StructureAbandonedVillagePieces.Start(worldIn.getBiomeProvider(), 0, rand, (x << 4) + 2, (z << 4) + 2, list, size);
+                StructureAbandonedVillagePieces.Start structurevillagepieces$start = new StructureAbandonedVillagePieces.Start(worldIn.getBiomeProvider(), 0, rand, (x << 4) + 2, (z << 4) + 2, list, size, charred);
                 this.components.add(structurevillagepieces$start);
                 structurevillagepieces$start.buildComponent(structurevillagepieces$start, this.components, rand);
                 List<StructureComponent> list1 = structurevillagepieces$start.pendingRoads;
