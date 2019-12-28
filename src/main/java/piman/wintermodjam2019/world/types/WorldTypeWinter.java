@@ -1,5 +1,6 @@
 package piman.wintermodjam2019.world.types;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeProvider;
@@ -29,5 +30,5 @@ public class WorldTypeWinter extends WorldType {
 	public GenLayer getBiomeLayer(long worldSeed, GenLayer parentLayer, ChunkGeneratorSettings chunkSettings) {
 		return new GenLayerWinterBiomes(worldSeed, parentLayer, this, chunkSettings);
 	}
-
+	
 }

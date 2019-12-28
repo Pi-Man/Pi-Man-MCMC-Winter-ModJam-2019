@@ -44,15 +44,17 @@ public class RuinsPieces {
 	}
 	
 	public static class ElderHut extends StructureComponent {
+		
+		public ElderHut() {}
 
 		@SuppressWarnings("incomplete-switch")
-		public ElderHut(Random rand, int chunkX, int chunkZ) {
+		public ElderHut(World worldIn, Random rand, int chunkX, int chunkZ) {
 			setCoordBaseMode(EnumFacing.Plane.HORIZONTAL.random(rand));
 			
 			int x = (chunkX << 4) + 8;
 			int z = (chunkZ << 4) + 8;
 			
-			int y = 64;
+			int y = 0;
 			
 			int sizeX = 8;
 			int sizeY = 8;
@@ -202,6 +204,8 @@ public class RuinsPieces {
 
 	public static class Ruins1 extends StructureComponent {
 		
+		public Ruins1() {}
+		
 		public Ruins1(Random rand, int chunkX, int chunkZ) {
 			
 			setCoordBaseMode(EnumFacing.Plane.HORIZONTAL.random(rand));
@@ -212,7 +216,7 @@ public class RuinsPieces {
 			int y = 64;
 			
 			int sizeX = 5;
-			int sizeY = 5;
+			int sizeY = 4;
 			int sizeZ = 5;
 			
             this.setCoordBaseMode(EnumFacing.Plane.HORIZONTAL.random(rand));

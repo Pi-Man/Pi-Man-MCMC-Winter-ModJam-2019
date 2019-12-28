@@ -3,6 +3,7 @@ package piman.wintermodjam2019.eventhandlers;
 import java.util.ArrayList;
 import java.util.List;
 
+import ibxm.Player;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -16,11 +17,13 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.MapDecoration;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import piman.wintermodjam2019.Main;
+import piman.wintermodjam2019.init.ModItems;
 
 @EventBusSubscriber
-public class EntityTickHandler {
+public class EntityEventHandler {
 
 	@SubscribeEvent
 	public static void onPlayerTick(PlayerTickEvent event) {
@@ -34,6 +37,14 @@ public class EntityTickHandler {
 			updateAdvancements(playerMP, world);	
 			
 			updateMaps(playerMP, world);
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerLogOn(PlayerLoggedInEvent event) {
+		if (!event.player.getEntityData().getBoolean("HasJournal")) {
+			event.player.addItemStackToInventory(new ItemStack(ModItems.JOURNAL));
+			event.player.getEntityData().setBoolean("HasJournal", true);
 		}
 	}
 	

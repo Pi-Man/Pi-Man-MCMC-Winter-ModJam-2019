@@ -82,7 +82,7 @@ public class ItemJournal extends ItemWrittenBook implements ICustomModelLocation
 							BlockPos pos = worldIn.findNearestStructure("Ruins1", BlockPos.ORIGIN, false);
 							NBTTagString day2 = new NBTTagString(
 									  "Day: " + i + "\n"
-									+ "    I managed to find my way to the Elder's Hut.  Now with his notes, I should be able to find our lost city if the clues still exist in the world.  The first place to check should be {" + pos.getX() + ", " + pos.getZ() + "}.");
+									+ "    I managed to find my way to the Elder's Hut.  Now with his notes, I should be able to find our lost city if the clues still exist in the world.  The first place to check should be {" + pos.getX() + ", " + pos.getZ() + "}, though it may be burried.");
 							pages.appendTag(day2);
 							nbt.setByte("resolved", (byte) 0);
 						}
